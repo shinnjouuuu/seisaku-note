@@ -1,0 +1,129 @@
+/* Hallmark · genre: editorial · macrostructure: Long Document · theme: design.md（青1色相・3トーン）· enrichment: Tier A（ノートの罫線）· nav: なし · footer: なし（仕様の3セクションのみ）
+ * tone: 落ち着いた冊子 · anchor hue: blue 262
+ * contrast: pass (40–41)
+ */
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-strong: var(--primary-strong);
+  --color-primary-pale: var(--primary-pale);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+}
+
+:root {
+  --radius: 0.625rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  /* 青の3トーン（面／文字／pale地）。役割と値の正は DESIGN.md */
+  --primary: oklch(0.546 0.245 262.881);
+  --primary-foreground: oklch(0.985 0 0);
+  --primary-strong: oklch(0.488 0.243 264.376);
+  --primary-pale: oklch(0.97 0.014 254.604);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.546 0.245 262.881);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  /* 面はライトと同じ青＋白文字。文字と地は暗い背景用に明暗を入れ替える */
+  --primary: oklch(0.546 0.245 262.881);
+  --primary-foreground: oklch(0.985 0 0);
+  --primary-strong: oklch(0.707 0.165 254.624);
+  --primary-pale: oklch(0.282 0.091 267.935);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.546 0.245 262.881);
+}
+
+/* ノートの罫線。線の色は --primary を薄めたもので、新しい色は足さない（DESIGN.md の青のまま） */
+@utility bg-ruled {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0 calc(2rem - 1px),
+    color-mix(in oklch, var(--primary) 14%, transparent) calc(2rem - 1px) 2rem
+  );
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring;
+  }
+  body {
+    @apply bg-background text-foreground;
+    /* 日本語を文節で折り返す（スマホ幅で「サ／イト」のような語中改行を防ぐ）。未対応ブラウザは通常の折り返しに戻る */
+    word-break: auto-phrase;
+    /* 和文フェイスを明示する（system-ui 任せにしない）。Webフォントは読み込まず、OS に入っている書体だけを使う */
+    font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic UI", sans-serif;
+    /* 和文の本文は欧文より行間が要る（1.6〜1.9 の中ほど） */
+    line-height: 1.8;
+    line-break: strict;
+    overflow-wrap: anywhere;
+  }
+  h1,
+  h2 {
+    /* 見出しは詰めて組む。禁則は本文より緩めて不自然な追い出しを避ける */
+    line-height: 1.3;
+    line-break: normal;
+    font-feature-settings: "palt";
+    letter-spacing: 0.02em;
+  }
+  h1 {
+    /* 大見出しは 1 行で読ませる前提なので、行間を詰めて上下の空きを作らない */
+    line-height: 1.1;
+  }
+}
+
+/* 和文と英数字の間に自動でアキを入れる。未対応ブラウザでは何もしない */
+@supports (text-autospace: normal) {
+  body {
+    text-autospace: normal;
+  }
+}
